@@ -234,7 +234,7 @@
       <h1>Antifungal Drug Interaction Quiz</h1>
       <div class="sub">
         Pick a drug pair, choose the direction of effect on each drug, then submit to see the answer and a short explanation.
-        This is a teaching prototype, not a full interaction checker.
+        This is a teaching prototype, not a full interaction checker. It now includes antifungal pairings with transplant drugs, antituberculars, selected HIV antiretrovirals, divalent cations, and a few HCV agents.
       </div>
       <div class="legend">
         <div class="item">↑ = exposure/effect increases</div>
@@ -343,7 +343,7 @@
         b: 'Voriconazole',
         effectA: 'same',
         effectB: 'down',
-        explanation: 'Letermovir can reduce voriconazole exposure, likely through CYP2C9/CYP2C19 induction effects. Voriconazole does not produce a predictable, clinically dominant change in letermovir exposure. Management: avoid or monitor azole levels/clinical response.'
+        explanation: 'Letermovir can reduce voriconazole exposure, likely through CYP2C9/CYP2C19 induction effects. Voriconazole does not produce a predictable, clinically dominant change in letermovir exposure. Management: avoid or monitor azole levels and clinical response.'
       },
       {
         a: 'Phenytoin',
@@ -371,7 +371,7 @@
         b: 'Rifampin',
         effectA: 'down',
         effectB: 'same',
-        explanation: 'Rifampin is a potent inducer and drastically lowers voriconazole exposure; the combination is essentially a nonstarter. Voriconazole does not cause a clinically important increase in rifampin exposure. Management: contraindicated/avoid.'
+        explanation: 'Rifampin is a potent inducer and drastically lowers voriconazole exposure; the combination is essentially a nonstarter. Voriconazole does not cause a clinically important increase in rifampin exposure. Management: contraindicated or avoid.'
       },
       {
         a: 'Voriconazole',
@@ -406,14 +406,105 @@
         b: 'Posaconazole',
         effectA: 'up',
         effectB: 'same',
-        explanation: 'Posaconazole increases cyclosporine exposure through CYP3A4 inhibition. Management: monitor cyclosporine concentrations and renal/hepatic toxicity; dose reduce as needed.'
+        explanation: 'Posaconazole increases cyclosporine exposure through CYP3A4 inhibition. Management: monitor cyclosporine concentrations and renal and hepatic toxicity; dose reduce as needed.'
       },
       {
         a: 'Sirolimus',
         b: 'Voriconazole',
         effectA: 'up',
         effectB: 'same',
-        explanation: 'Voriconazole can massively increase sirolimus exposure. Management: generally avoid/contraindicated unless a carefully managed dose strategy and level monitoring are in place.'
+        explanation: 'Voriconazole can massively increase sirolimus exposure. Management: generally avoid or treat as effectively contraindicated unless a carefully managed dose strategy and level monitoring are in place.'
+      },
+      {
+        a: 'Calcium',
+        b: 'Itraconazole',
+        effectA: 'same',
+        effectB: 'down',
+        explanation: 'Divalent cations do not create a classic chelation problem for itraconazole the way they do for fluoroquinolones or integrase inhibitors, but coadministration can still reflect a higher gastric pH or formulation-related absorption problem. The main teaching point is that itraconazole exposure can fall, especially with capsule formulations or impaired acidity. Management: separate when feasible and pay attention to formulation and acid-suppression status.'
+      },
+      {
+        a: 'Calcium',
+        b: 'Posaconazole',
+        effectA: 'same',
+        effectB: 'same',
+        explanation: 'No major, clinically dominant direct interaction is expected between calcium and posaconazole. The bigger issue for posaconazole is food effect and formulation, not chelation. Management: no special action for calcium alone; optimize formulation-specific administration.'
+      },
+      {
+        a: 'Calcium',
+        b: 'Flucytosine',
+        effectA: 'same',
+        effectB: 'same',
+        explanation: 'No meaningful pharmacokinetic interaction is expected. Management: no special action.'
+      },
+      {
+        a: 'Mavyret',
+        b: 'Voriconazole',
+        effectA: 'same',
+        effectB: 'up',
+        explanation: 'Glecaprevir-pibrentasvir is not a clean CYP inducer, but the practical concern is overlapping hepatic burden and potential transporter or metabolic effects that can complicate azole exposure. For teaching purposes, treat voriconazole exposure and toxicity risk as potentially increased or less predictable rather than cleanly neutral. Management: use caution and monitor for hepatotoxicity and azole toxicity.'
+      },
+      {
+        a: 'Mavyret',
+        b: 'Posaconazole',
+        effectA: 'same',
+        effectB: 'up',
+        explanation: 'A major reciprocal interaction is not the classic headline here, but combined use may increase exposure complexity and hepatotoxicity risk. For teaching, posaconazole is the drug more likely to warrant watchfulness for rising exposure or intolerance. Management: monitor liver tests and adverse effects.'
+      },
+      {
+        a: 'Efavirenz',
+        b: 'Voriconazole',
+        effectA: 'up',
+        effectB: 'down',
+        explanation: 'Efavirenz and voriconazole have a major bidirectional interaction. Efavirenz lowers voriconazole exposure via induction, while voriconazole can increase efavirenz exposure through inhibition. Management: usually avoid standard dosing together; if coadministered, use the specific adjusted dosing strategy from labeling or choose alternatives.'
+      },
+      {
+        a: 'Ritonavir',
+        b: 'Voriconazole',
+        effectA: 'same',
+        effectB: 'down',
+        explanation: 'Ritonavir can markedly reduce voriconazole exposure through enzyme induction effects despite also inhibiting some CYP pathways. Net effect: voriconazole usually goes down. Management: avoid the combination unless there is a compelling reason and close monitoring.'
+      },
+      {
+        a: 'Atazanavir/ritonavir',
+        b: 'Itraconazole',
+        effectA: 'up',
+        effectB: 'up',
+        explanation: 'Boosted protease inhibitors and itraconazole can increase one another’s exposure through CYP3A4 inhibition. Management: avoid high itraconazole doses, monitor for toxicity, and review the full ARV regimen.'
+      },
+      {
+        a: 'Darunavir/ritonavir',
+        b: 'Posaconazole',
+        effectA: 'up',
+        effectB: 'same',
+        explanation: 'Posaconazole can increase boosted protease inhibitor exposure through CYP3A4 inhibition. The effect on posaconazole is less predictable and usually not the dominant teaching point. Management: monitor for PI toxicity and consider regimen-specific review.'
+      },
+      {
+        a: 'Tenofovir alafenamide',
+        b: 'Itraconazole',
+        effectA: 'up',
+        effectB: 'same',
+        explanation: 'Itraconazole inhibits P-gp and may increase tenofovir alafenamide exposure. The reverse effect is not clinically dominant. Management: usually monitor rather than avoid.'
+      },
+      {
+        a: 'Dolutegravir',
+        b: 'Fluconazole',
+        effectA: 'same',
+        effectB: 'same',
+        explanation: 'No major clinically meaningful interaction is expected between dolutegravir and fluconazole. Management: no special action.'
+      },
+      {
+        a: 'Rilpivirine',
+        b: 'Voriconazole',
+        effectA: 'up',
+        effectB: 'same',
+        explanation: 'Voriconazole can increase rilpivirine exposure via CYP3A4 inhibition. The bigger practical concern is additive QT risk in susceptible patients rather than a dramatic change in voriconazole. Management: use caution, review QT risk factors, and monitor for rilpivirine toxicity.'
+      },
+      {
+        a: 'Cobicistat',
+        b: 'Isavuconazole',
+        effectA: 'up',
+        effectB: 'up',
+        explanation: 'Cobicistat and isavuconazole both rely on CYP3A pathways, so coadministration can increase exposures. Management: use caution, monitor for toxicity, and check regimen-specific guidance.'
       }
     ];
 
