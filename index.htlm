@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Antifungal Drug Interaction Quiz</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel-2: #1f2937;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --good: #22c55e;
+      --bad: #ef4444;
+      --warn: #f59e0b;
+      --border: #334155;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #0f172a, #111827 45%, #172554);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .app {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      gap: 20px;
+    }
+
+    .card {
+      background: rgba(17, 24, 39, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 24px;
+      display: grid;
+      gap: 10px;
+      background: linear-gradient(135deg, rgba(56,189,248,0.16), rgba(99,102,241,0.10));
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      line-height: 1.1;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.5;
+      max-width: 80ch;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 20px;
+    }
+
+    .panel {
+      padding: 22px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 0.92rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    select, button {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      padding: 12px 14px;
+      font-size: 1rem;
+    }
+
+    button {
+      cursor: pointer;
+      transition: transform 0.12s ease, opacity 0.12s ease, border-color 0.12s ease;
+      font-weight: 700;
+    }
+
+    button:hover { transform: translateY(-1px); border-color: var(--accent); }
+    button.secondary { background: #0b1220; }
+    button.primary { background: linear-gradient(135deg, #0369a1, #1d4ed8); }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .button-row button { width: auto; min-width: 160px; }
+
+    .quiz-box {
+      display: grid;
+      gap: 16px;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(15,23,42,0.72);
+      border: 1px solid var(--border);
+    }
+
+    .pair {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(56,189,248,0.12);
+      border: 1px solid rgba(56,189,248,0.28);
+    }
+
+    .arrow-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .result {
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(2, 6, 23, 0.6);
+      display: none;
+      gap: 12px;
+    }
+
+    .result.show { display: grid; }
+    .score.good { color: var(--good); }
+    .score.bad { color: var(--bad); }
+    .explanation {
+      line-height: 1.6;
+      color: #dbeafe;
+      white-space: pre-line;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .legend .item {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.08);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .small {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      overflow: hidden;
+      border-radius: 14px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      color: #cbd5e1;
+      background: rgba(30,41,59,0.75);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    @media (max-width: 900px) {
+      .grid, .row, .arrow-grid { grid-template-columns: 1fr; }
+      .button-row button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="card hero">
+      <h1>Antifungal Drug Interaction Quiz</h1>
+      <div class="sub">
+        Pick a drug pair, choose the direction of effect on each drug, then submit to see the answer and a short explanation.
+        This is a teaching prototype, not a full interaction checker.
+      </div>
+      <div class="legend">
+        <div class="item">↑ = exposure/effect increases</div>
+        <div class="item">↔ = no clinically meaningful change</div>
+        <div class="item">↓ = exposure/effect decreases</div>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="card panel">
+        <div class="row">
+          <div class="field">
+            <label for="drugA">Drug A</label>
+            <select id="drugA"></select>
+          </div>
+          <div class="field">
+            <label for="drugB">Drug B</label>
+            <select id="drugB"></select>
+          </div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="pair">
+            <span class="pill" id="currentA">Warfarin</span>
+            <span>+</span>
+            <span class="pill" id="currentB">Voriconazole</span>
+          </div>
+
+          <div class="arrow-grid">
+            <div class="field">
+              <label for="effectA">Effect on Drug A</label>
+              <select id="effectA">
+                <option value="">Select</option>
+                <option value="up">↑ Increase</option>
+                <option value="same">↔ No major change</option>
+                <option value="down">↓ Decrease</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="effectB">Effect on Drug B</label>
+              <select id="effectB">
+                <option value="">Select</option>
+                <option value="up">↑ Increase</option>
+                <option value="same">↔ No major change</option>
+                <option value="down">↓ Decrease</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button class="primary" id="submitBtn">Check answer</button>
+            <button class="secondary" id="randomBtn">Random pair</button>
+            <button class="secondary" id="showBtn">Show answer</button>
+          </div>
+        </div>
+
+        <div class="result" id="resultBox">
+          <div class="score" id="scoreLine"></div>
+          <div id="answerLine"></div>
+          <div class="explanation" id="explanation"></div>
+        </div>
+      </section>
+
+      <section class="card panel">
+        <h2 style="margin:0; font-size:1.25rem;">Included teaching pairs</h2>
+        <div class="small">
+          These are seeded from the examples you were working with. You can expand the <code>interactions</code> array in the script to add more pairs.
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Drug A</th>
+              <th>Drug B</th>
+              <th>Answer</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const interactions = [
+      {
+        a: 'Warfarin',
+        b: 'Voriconazole',
+        effectA: 'up',
+        effectB: 'same',
+        explanation: 'Voriconazole inhibits CYP2C9 and CYP3A4, so warfarin exposure and INR increase. Warfarin does not meaningfully change voriconazole exposure. Management: lower warfarin dose as needed and monitor INR closely.'
+      },
+      {
+        a: 'Phenytoin',
+        b: 'Voriconazole',
+        effectA: 'up',
+        effectB: 'down',
+        explanation: 'This is the classic ugly bidirectional interaction. Voriconazole can increase phenytoin concentrations via CYP2C9/2C19 inhibition, while phenytoin strongly induces CYP metabolism and lowers voriconazole exposure. Management: avoid if possible; if used together, dose-adjust and use drug-level monitoring.'
+      },
+      {
+        a: 'Letermovir',
+        b: 'Voriconazole',
+        effectA: 'same',
+        effectB: 'down',
+        explanation: 'Letermovir can reduce voriconazole exposure, likely through CYP2C9/CYP2C19 induction effects. Voriconazole does not produce a predictable, clinically dominant change in letermovir exposure. Management: avoid or monitor azole levels/clinical response.'
+      },
+      {
+        a: 'Phenytoin',
+        b: 'Fluconazole',
+        effectA: 'up',
+        effectB: 'down',
+        explanation: 'Fluconazole inhibits phenytoin metabolism and raises phenytoin concentrations. Phenytoin can induce metabolism and lower fluconazole exposure to some degree, though the dominant teaching point is phenytoin toxicity risk. Management: monitor phenytoin levels and clinical response.'
+      },
+      {
+        a: 'Posaconazole',
+        b: 'Isoniazid',
+        effectA: 'same',
+        effectB: 'same',
+        explanation: 'No major, well-established bidirectional pharmacokinetic interaction is expected here. The practical issue is additive hepatotoxicity risk rather than a clean exposure shift. Management: monitor liver tests.'
+      },
+      {
+        a: 'Isavuconazole',
+        b: 'Tacrolimus',
+        effectA: 'same',
+        effectB: 'up',
+        explanation: 'Isavuconazole is a moderate CYP3A4 inhibitor and increases tacrolimus exposure. Tacrolimus does not meaningfully change isavuconazole levels. Management: reduce tacrolimus dose empirically and monitor troughs closely.'
+      },
+      {
+        a: 'Voriconazole',
+        b: 'Rifampin',
+        effectA: 'down',
+        effectB: 'same',
+        explanation: 'Rifampin is a potent inducer and drastically lowers voriconazole exposure; the combination is essentially a nonstarter. Voriconazole does not cause a clinically important increase in rifampin exposure. Management: contraindicated/avoid.'
+      },
+      {
+        a: 'Voriconazole',
+        b: 'Rifabutin',
+        effectA: 'down',
+        effectB: 'up',
+        explanation: 'Rifabutin induces voriconazole metabolism and lowers voriconazole exposure. Voriconazole inhibits rifabutin metabolism and raises rifabutin concentrations. Management: usually avoid; if forced, monitor closely for rifabutin toxicity and inadequate voriconazole exposure.'
+      },
+      {
+        a: 'Voriconazole',
+        b: 'Omeprazole',
+        effectA: 'up',
+        effectB: 'up',
+        explanation: 'Omeprazole can increase voriconazole exposure through CYP2C19 inhibition. Voriconazole can also increase omeprazole exposure via CYP2C19 inhibition. Management: watch for toxicity; dose reduction may be needed.'
+      },
+      {
+        a: 'Posaconazole',
+        b: 'Diltiazem',
+        effectA: 'same',
+        effectB: 'up',
+        explanation: 'Posaconazole inhibits CYP3A4 and can increase diltiazem exposure. Diltiazem is not expected to cause a major, consistent change in posaconazole exposure. Management: monitor blood pressure, heart rate, and for bradycardia or edema.'
+      },
+      {
+        a: 'Tacrolimus',
+        b: 'Voriconazole',
+        effectA: 'up',
+        effectB: 'same',
+        explanation: 'Voriconazole strongly inhibits tacrolimus metabolism and can markedly increase tacrolimus concentrations. Management: large tacrolimus dose reduction plus frequent trough monitoring.'
+      },
+      {
+        a: 'Cyclosporine',
+        b: 'Posaconazole',
+        effectA: 'up',
+        effectB: 'same',
+        explanation: 'Posaconazole increases cyclosporine exposure through CYP3A4 inhibition. Management: monitor cyclosporine concentrations and renal/hepatic toxicity; dose reduce as needed.'
+      },
+      {
+        a: 'Sirolimus',
+        b: 'Voriconazole',
+        effectA: 'up',
+        effectB: 'same',
+        explanation: 'Voriconazole can massively increase sirolimus exposure. Management: generally avoid/contraindicated unless a carefully managed dose strategy and level monitoring are in place.'
+      }
+    ];
+
+    const arrowLabel = { up: '↑', same: '↔', down: '↓' };
+    const drugASelect = document.getElementById('drugA');
+    const drugBSelect = document.getElementById('drugB');
+    const effectASelect = document.getElementById('effectA');
+    const effectBSelect = document.getElementById('effectB');
+    const currentA = document.getElementById('currentA');
+    const currentB = document.getElementById('currentB');
+    const resultBox = document.getElementById('resultBox');
+    const scoreLine = document.getElementById('scoreLine');
+    const answerLine = document.getElementById('answerLine');
+    const explanation = document.getElementById('explanation');
+    const tableBody = document.getElementById('tableBody');
+
+    const drugs = [...new Set(interactions.flatMap(x => [x.a, x.b]))].sort();
+
+    function fillSelect(select, options, placeholder) {
+      select.innerHTML = '';
+      const p = document.createElement('option');
+      p.value = '';
+      p.textContent = placeholder;
+      select.appendChild(p);
+      options.forEach(opt => {
+        const o = document.createElement('option');
+        o.value = opt;
+        o.textContent = opt;
+        select.appendChild(o);
+      });
+    }
+
+    function renderTable() {
+      tableBody.innerHTML = '';
+      interactions.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.a}</td>
+          <td>${item.b}</td>
+          <td>${arrowLabel[item.effectA]} / ${arrowLabel[item.effectB]}</td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    function updateCurrentPair() {
+      currentA.textContent = drugASelect.value || 'Drug A';
+      currentB.textContent = drugBSelect.value || 'Drug B';
+      resultBox.classList.remove('show');
+    }
+
+    function findInteraction(a, b) {
+      return interactions.find(x => x.a === a && x.b === b) || null;
+    }
+
+    function setRandomPair() {
+      const item = interactions[Math.floor(Math.random() * interactions.length)];
+      drugASelect.value = item.a;
+      drugBSelect.value = item.b;
+      effectASelect.value = '';
+      effectBSelect.value = '';
+      updateCurrentPair();
+    }
+
+    function showResult(forceShowAnswer = false) {
+      const a = drugASelect.value;
+      const b = drugBSelect.value;
+      if (!a || !b) {
+        alert('Pick both Drug A and Drug B.');
+        return;
+      }
+      const item = findInteraction(a, b);
+      if (!item) {
+        resultBox.classList.add('show');
+        scoreLine.className = 'score bad';
+        scoreLine.textContent = 'No keyed answer for that exact pair yet.';
+        answerLine.textContent = 'Try a seeded teaching pair from the table on the right, or add more rows in the script.';
+        explanation.textContent = 'This prototype only knows the interactions explicitly included in the data array.';
+        return;
+      }
+
+      const guessA = effectASelect.value;
+      const guessB = effectBSelect.value;
+      const correct = guessA === item.effectA && guessB === item.effectB;
+      resultBox.classList.add('show');
+
+      if (forceShowAnswer) {
+        scoreLine.className = 'score good';
+        scoreLine.textContent = 'Answer revealed.';
+      } else {
+        scoreLine.className = 'score ' + (correct ? 'good' : 'bad');
+        scoreLine.textContent = correct ? 'Correct.' : 'Not quite.';
+      }
+
+      answerLine.innerHTML = `<strong>Correct answer:</strong> Effect on Drug A = ${arrowLabel[item.effectA]} &nbsp;&nbsp;|&nbsp;&nbsp; Effect on Drug B = ${arrowLabel[item.effectB]}`;
+      explanation.textContent = item.explanation;
+    }
+
+    fillSelect(drugASelect, drugs, 'Select Drug A');
+    fillSelect(drugBSelect, drugs, 'Select Drug B');
+    renderTable();
+    setRandomPair();
+
+    drugASelect.addEventListener('change', updateCurrentPair);
+    drugBSelect.addEventListener('change', updateCurrentPair);
+    document.getElementById('submitBtn').addEventListener('click', () => showResult(false));
+    document.getElementById('showBtn').addEventListener('click', () => showResult(true));
+    document.getElementById('randomBtn').addEventListener('click', setRandomPair);
+  </script>
+</body>
+</html>
