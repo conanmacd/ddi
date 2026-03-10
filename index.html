@@ -184,6 +184,16 @@
       font-size: 0.92rem;
     }
 
+    .arrow-up, .arrow-down {
+      color: #fca5a5;
+      font-weight: 800;
+    }
+
+    .arrow-same {
+      color: #86efac;
+      font-weight: 800;
+    }
+
     .small {
       font-size: 0.88rem;
       color: var(--muted);
@@ -289,19 +299,24 @@
       </section>
 
       <section class="card panel">
-        <h2 style="margin:0; font-size:1.25rem;">Included teaching pairs</h2>
+        <h2 style="margin:0; font-size:1.25rem;">Progress</h2>
         <div class="small">
-          These are seeded from the examples you were working with. You can expand the <code>interactions</code> array in the script to add more pairs.
+          Completed questions appear here after the learner submits or reveals an answer. That keeps the exercise challenging up front while still building a review trail.
         </div>
         <table>
           <thead>
             <tr>
               <th>Drug A</th>
               <th>Drug B</th>
-              <th>Answer</th>
+              <th>Your guess</th>
+              <th>Correct answer</th>
             </tr>
           </thead>
-          <tbody id="tableBody"></tbody>
+          <tbody id="historyBody">
+            <tr id="emptyHistoryRow">
+              <td colspan="4" style="color: var(--muted);">No completed questions yet.</td>
+            </tr>
+          </tbody>
         </table>
       </section>
     </div>
@@ -413,7 +428,8 @@
     const scoreLine = document.getElementById('scoreLine');
     const answerLine = document.getElementById('answerLine');
     const explanation = document.getElementById('explanation');
-    const tableBody = document.getElementById('tableBody');
+    const historyBody = document.getElementById('historyBody');
+    const completedKeys = new Set();
 
     const drugs = [...new Set(interactions.flatMap(x => [x.a, x.b]))].sort();
 
@@ -431,17 +447,28 @@
       });
     }
 
-    function renderTable() {
-      tableBody.innerHTML = '';
-      interactions.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${item.a}</td>
-          <td>${item.b}</td>
-          <td>${arrowLabel[item.effectA]} / ${arrowLabel[item.effectB]}</td>
-        `;
-        tableBody.appendChild(tr);
-      });
+    function formatArrow(value) {
+      if (value === 'up') return '<span class="arrow-up">↑</span>';
+      if (value === 'down') return '<span class="arrow-down">↓</span>';
+      return '<span class="arrow-same">↔</span>';
+    }
+
+    function addHistoryRow(item, guessA, guessB) {
+      const emptyRow = document.getElementById('emptyHistoryRow');
+      if (emptyRow) emptyRow.remove();
+
+      const key = `${item.a}__${item.b}__${guessA || 'blank'}__${guessB || 'blank'}`;
+      if (completedKeys.has(key)) return;
+      completedKeys.add(key);
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${item.a}</td>
+        <td>${item.b}</td>
+        <td>${formatArrow(guessA || 'same')} / ${formatArrow(guessB || 'same')}</td>
+        <td>${formatArrow(item.effectA)} / ${formatArrow(item.effectB)}</td>
+      `;
+      historyBody.prepend(tr);
     }
 
     function updateCurrentPair() {
@@ -475,13 +502,19 @@
         resultBox.classList.add('show');
         scoreLine.className = 'score bad';
         scoreLine.textContent = 'No keyed answer for that exact pair yet.';
-        answerLine.textContent = 'Try a seeded teaching pair from the table on the right, or add more rows in the script.';
+        answerLine.textContent = 'Try a seeded teaching pair, or add more rows in the script.';
         explanation.textContent = 'This prototype only knows the interactions explicitly included in the data array.';
         return;
       }
 
       const guessA = effectASelect.value;
       const guessB = effectBSelect.value;
+
+      if (!forceShowAnswer && (!guessA || !guessB)) {
+        alert('Choose an arrow for both drugs before submitting.');
+        return;
+      }
+
       const correct = guessA === item.effectA && guessB === item.effectB;
       resultBox.classList.add('show');
 
@@ -493,13 +526,13 @@
         scoreLine.textContent = correct ? 'Correct.' : 'Not quite.';
       }
 
-      answerLine.innerHTML = `<strong>Correct answer:</strong> Effect on Drug A = ${arrowLabel[item.effectA]} &nbsp;&nbsp;|&nbsp;&nbsp; Effect on Drug B = ${arrowLabel[item.effectB]}`;
+      answerLine.innerHTML = `<strong>Correct answer:</strong> Effect on Drug A = ${formatArrow(item.effectA)} &nbsp;&nbsp;|&nbsp;&nbsp; Effect on Drug B = ${formatArrow(item.effectB)}`;
       explanation.textContent = item.explanation;
+      addHistoryRow(item, guessA, guessB);
     }
 
     fillSelect(drugASelect, drugs, 'Select Drug A');
     fillSelect(drugBSelect, drugs, 'Select Drug B');
-    renderTable();
     setRandomPair();
 
     drugASelect.addEventListener('change', updateCurrentPair);
